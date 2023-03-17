@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel">
+
+    <vm:LoginViewModel x:Key="LoginVM"/>
+    <vm:TableManagerViewModel x:Key="TableManagerVM"/>
+    <vm:SkinViewModel x:Key="SkinVM"/>
+    <vm:PrintBillViewModel x:Key="PrintBillVM"/>
+    <vm:AccountProfileViewModel x:Key="AccountProfileVM"/>
+    <vm:BillViewModel x:Key="BillVM"/>
+    <vm:FoodViewModel x:Key="FoodVM"/>
+    <vm:CategoryViewModel x:Key="CategoryVM"/>
+    <vm:TableViewModel x:Key="TableVM"/>
+    <vm:AccountViewModel x:Key="AccountVM"/>
+    <vm:ReportViewModel x:Key="ReportVM"/>
+    <vm:InsertAccountViewModel x:Key="InsertAccountVM"/>
+</ResourceDictionary>

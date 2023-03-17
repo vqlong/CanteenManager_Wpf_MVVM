@@ -1,0 +1,41 @@
+﻿<Window x:Class="View.InsertAccountView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:View"
+        mc:Ignorable="d"
+        Title="Thêm tài khoản mới"  Width="400"
+        SizeToContent="Height"
+        Style="{StaticResource Window.CustomStyle}"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{StaticResource InsertAccountVM}">
+    <x:Code>
+        <![CDATA[
+            public InsertAccountView()
+            {
+                InitializeComponent();
+
+                txbUsername.Focus();
+            }
+        ]]>
+    </x:Code>
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{Binding Source={StaticResource SkinVM}, Path=BillColorView.CurrentItem.Brush}"/>
+            <Setter Property="FontFamily" Value="{Binding Source={StaticResource SkinVM}, Path=FontFamiliesView.CurrentItem.Source}"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0 0 0 1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="35 10 35 10"> 
+        <TextBlock TextAlignment="Left">Tên đăng nhập:</TextBlock>
+        <TextBox x:Name="txbUsername" Text="{Binding Username, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Validation.ErrorTemplate="{StaticResource ErrorTemplate2}"/>
+        <Button Content="Thêm tài khoản mới" Height="30" IsDefault="True" Style="{StaticResource Button.RectangleStyle}" Margin="0 18 0 0" Command="{Binding InsertAccount}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+
+    </StackPanel>
+</Window>

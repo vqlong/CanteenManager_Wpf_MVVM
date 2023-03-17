@@ -1,0 +1,224 @@
+﻿<Window x:Class="View.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:View"
+        mc:Ignorable="d"
+        Title="Đăng nhập"
+        WindowStartupLocation="CenterScreen"
+        Icon="Images/icon.ico" 
+        Width="880"
+        MinWidth="880"
+        Height="570" 
+        MinHeight="570"
+        Style="{StaticResource Window.LoginStyle}"
+        DataContext="{StaticResource LoginVM}" 
+        xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel">
+    <x:Code>
+        <![CDATA[
+        public LoginView()
+        {
+            InitializeComponent();
+
+            Activated += (s, e) => txbUsername.Focus();
+            MouseDown += (s, e) => DragMove();
+            LostKeyboardFocus += (s, e) => System.Diagnostics.Debug.WriteLine($"From: {e.OldFocus}\n ~To: {e.NewFocus}");
+        }
+        
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is PasswordBox passwordBox && passwordBox.TemplatedParent is TextBox textBox) textBox.Text = passwordBox.Password;
+        }
+
+        private void PasswordBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is PasswordBox passwordBox && passwordBox.TemplatedParent is TextBox textBox) passwordBox.Password = textBox.Text;
+        }
+        ]]>
+    </x:Code>
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="Continue"/>
+        </Style>
+        <ControlTemplate x:Key="TextBox.PasswordTemplate" TargetType="TextBox">
+            <PasswordBox Focusable="True" IsTabStop="True" Background="Transparent" BorderThickness="0" Loaded="PasswordBox_Loaded" PasswordChanged="PasswordBox_PasswordChanged"/>
+        </ControlTemplate>
+        <Style x:Key="TextBox.PasswordStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=ckbShowPassword, Path=IsChecked}" Value="False">
+                    <Setter Property="Template" Value="{StaticResource TextBox.PasswordTemplate}"/>
+                    <Setter Property="IsTabStop" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderThickness="1"
+                                BorderBrush="Silver"
+                                CornerRadius="10">
+                            <ContentPresenter TextBlock.FontSize="40" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#ccf9ff"/>
+                                <Setter Property="BorderBrush" Value="#00acdf"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#7ce8ff"/>
+                                <Setter Property="BorderBrush" Value="#0080bf"/>
+                            </Trigger>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" Value="#7873f5"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" Value="#FFF4F4F4"/>
+                                <Setter Property="BorderBrush" Value="#FFADB2B5"/>
+                                <Setter Property="TextElement.Foreground" Value="#FF838383"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Button.TestConnectionStyle" TargetType="Button">
+            <Setter Property="Content" Value="Click để kiểm tra kết nối..."/>
+            <Setter Property="Height" Value="80"/>
+            <Setter Property="FontSize" Value="36"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <ProgressBar Name="progress"
+                                         Background="{TemplateBinding Background}" 
+                                         BorderThickness="0"/>
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LimeGreen"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding TestResult}" Value="Waiting">
+                                <Setter TargetName="progress" Property="IsIndeterminate" Value="True"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Content" Value="Đang kết nối..."/>
+                                <Setter Property="Cursor" Value="AppStarting"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding TestResult}" Value="Success">
+                                <Setter TargetName="progress" Property="IsIndeterminate" Value="False"/>
+                                <Setter Property="Background" Value="LimeGreen"/>
+                                <Setter Property="Content" Value="Kết nối thành công!"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding TestResult}" Value="{x:Static vm:TestConnectionResult.Fail}">
+                                <Setter TargetName="progress" Property="IsIndeterminate" Value="False"/>
+                                <Setter Property="Background" Value="Red"/>
+                                <Setter Property="Content" Value="Kết nối thất bại!"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <StackPanel Orientation="Vertical" TextBlock.FontSize="40" Margin="30 0 30 0">
+            <StackPanel.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="Silver"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text="Tên đăng nhập:" Margin="0,10,0,0"/>
+            <Border >
+                <TextBox x:Name="txbUsername" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+            </Border>
+            <TextBlock Text="Mật khẩu:" Margin="0,10,0,0"/>
+            <Border >
+                <!--KeyboardNavigation.TabNavigation="Continue" Truyền focus cho PasswordBox trong template-->
+                <TextBox x:Name="txbPassword" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBox.PasswordStyle}"/>
+            </Border>
+            <CheckBox x:Name="ckbShowPassword" Content="Hiện mật khẩu" FontSize="24" BorderBrush="Silver" Margin="0,10,0,40" />
+            <Button Content="Đăng nhập" IsDefault="True" Command="{Binding Login}" CommandParameter="{x:Type local:TableManagerView}"/>
+        </StackPanel>
+
+        <Button Name="btnTestConnection"
+                Style="{StaticResource Button.TestConnectionStyle}" 
+                Command="{Binding TestConnection}">
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="Button.Click">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="borderAnimation"
+                                                           Storyboard.TargetProperty="Visibility"
+                                                           Duration="0:0:6"
+                                                           FillBehavior="Stop">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Storyboard.TargetName="imgSpoon"
+                                             Storyboard.TargetProperty="RenderTransform.Angle"
+                                             From="0"
+                                             To="360"
+                                             Duration="0:0:2"
+                                             FillBehavior="Stop"
+                                             RepeatBehavior="0:0:6"/>
+                            <DoubleAnimation Storyboard.TargetName="imgNoodle"
+                                             Storyboard.TargetProperty="RenderTransform.Angle"
+                                             From="0"
+                                             To="360"
+                                             Duration="0:0:2"
+                                             FillBehavior="Stop"
+                                             RepeatBehavior="0:0:6"/>
+                            <DoubleAnimation Storyboard.TargetName="imgSpoon"
+                                             Storyboard.TargetProperty="(Canvas.Left)"
+                                             From="0"
+                                             To="{Binding ElementName=borderAnimation, Path=ActualWidth, Converter={StaticResource PlusParameter}, ConverterParameter=-160}"
+                                             Duration="0:0:6"
+                                             FillBehavior="Stop"/>
+                            <DoubleAnimation Storyboard.TargetName="imgNoodle"
+                                             Storyboard.TargetProperty="(Canvas.Left)"
+                                             From="80"
+                                             To="{Binding ElementName=borderAnimation, Path=ActualWidth, Converter={StaticResource PlusParameter}, ConverterParameter=-80}"
+                                             Duration="0:0:6"
+                                             FillBehavior="Stop"/>
+
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
+
+        <Border x:Name="borderAnimation" Focusable="False"
+                VerticalAlignment="Bottom"
+                Height="80"
+                Margin="0 0 0 83"
+                Visibility="Hidden">
+            <Canvas >
+                <Canvas.Resources>
+                    <Style TargetType="Image">
+                        <Setter Property="Width" Value="80"/>
+                        <Setter Property="RenderTransformOrigin" Value="0.5 0.5"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <RotateTransform />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Canvas.Resources>
+                <Image x:Name="imgSpoon" Canvas.Left="0" Source="Images/spoon.png"/>
+                <Image x:Name="imgNoodle" Canvas.Left="80" Source="Images/noodle.png"/>
+            </Canvas>
+        </Border>
+    </Grid>
+</Window>
