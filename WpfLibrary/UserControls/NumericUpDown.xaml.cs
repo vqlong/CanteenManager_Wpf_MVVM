@@ -236,7 +236,13 @@ namespace WpfLibrary.UserControls
                 
             }
                 
-        } 
+        }
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            if (e.Delta < 0) SetCurrentValue(ValueProperty, Value - Interval);
+            if (e.Delta > 0) SetCurrentValue(ValueProperty, Value + Interval);
+            base.OnMouseWheel(e);
+        }
         #endregion
     }
 }
