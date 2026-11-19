@@ -1,3 +1,7 @@
+> [!NOTE]
+> **Work in Progress:** This repository and its documentation are currently under active development and restructuring. Some sections may be incomplete or subject to change.
+
+```text
 Canteen/
 │
 ├── Presentation/
@@ -23,7 +27,8 @@ Canteen/
     ├── Food.cs
     ├── Category.cs
     └── Bill.cs
-	
+```
+
 # CanteenManager
 
 A desktop canteen management application built with **C# / .NET** following the **MVVM (Model-View-ViewModel)** architectural pattern, supporting both **SQLite** (local/embedded storage) and **SQL Server** (centralized relational database) via **Entity Framework Core** and **ADO.NET**.
